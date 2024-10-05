@@ -9,18 +9,24 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const posts = await prisma.post.findMany({
-    where: { author: { email: 'bbcparfait@example.com' }, published: true },
-    orderBy: { createdAt: 'desc' },
+  let posts = [];
+
+  const user = await prisma.user.findUnique({
+    where: { email: 'mock.user@example.com' },
+    select: { email: true, posts: { where: { published: true } } },
   });
 
-  const postCount = await prisma.post.count({ where: { published: true } });
+  if (!user) {
+    posts = [];
+  }
+
+  posts = user?.posts ?? [];
 
   return (
     <main>
       <div className='max-w-[1200px] mx-auto py-10 px-4'>
         <h1 className='text-4xl font-semibold mb-4'>
-          Latest posts ({postCount})
+          Latest posts ({posts.length})
         </h1>
         {posts.length ? (
           <ul>

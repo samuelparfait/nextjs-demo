@@ -17,9 +17,9 @@ export default async function Single({ params }: Props) {
     where: {
       slug: params.slug,
       published: true,
-      author: { email: 'bbcparfait@example.com' },
+      author: { email: 'mock.user@example.com' },
     },
-    include: { author: true },
+    include: { author: { select: { email: true, name: true } } },
   });
 
   if (!post) {
@@ -33,7 +33,7 @@ export default async function Single({ params }: Props) {
         <p className='mb-4'>
           By{' '}
           <span className='font-semibold'>
-            {post.author.email} |{' '}
+            {post.author.name} |{' '}
             {DateTime.fromISO(post.createdAt.toISOString()).toRelative()}
           </span>
         </p>
