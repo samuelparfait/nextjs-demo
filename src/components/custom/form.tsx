@@ -59,7 +59,7 @@ export function CreatePostForm({
           id='title'
           placeholder='Enter the blog post title'
           maxLength={55}
-          className='p-4 border rounded-md outline-2 outline-slate-800'
+          className='p-3 border rounded-md outline-2 outline-slate-800'
         />
         {errors.title && (
           <p role='alert' className='text-red-500 py-2'>
@@ -76,7 +76,7 @@ export function CreatePostForm({
           {...register('content')}
           id='content'
           placeholder='Write your blog post content here'
-          className='p-4 border rounded-md outline-2 outline-slate-800'
+          className='p-3 border rounded-md outline-2 outline-slate-800'
           rows={5}
         />
         {errors.content && (
@@ -88,7 +88,7 @@ export function CreatePostForm({
 
       <button
         type='submit'
-        className='w-full bg-slate-800 hover:bg-slate-950 text-white p-4 rounded-md'
+        className='w-full bg-slate-800 hover:bg-slate-950 text-white p-3 rounded-md'
       >
         Create Post
       </button>

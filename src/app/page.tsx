@@ -26,7 +26,7 @@ export default async function Home() {
     <main>
       <div className='max-w-[1200px] mx-auto py-10 px-4'>
         <h1 className='text-4xl font-semibold mb-4'>
-          Latest posts ({posts.length})
+          All posts ({posts.length})
         </h1>
         {posts.length ? (
           <ul>

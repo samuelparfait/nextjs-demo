@@ -20,8 +20,8 @@ export async function createPost(formData: FormData) {
       title,
       content,
       slug,
-      published: true,
-      author: { connect: { email: 'bbcparfait@example.com' } },
+      published: false,
+      author: { connect: { email: 'mock.user@example.com' } },
     },
   });
 
