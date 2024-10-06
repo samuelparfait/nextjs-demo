@@ -28,20 +28,18 @@ export async function createPost(formData: FormData) {
     revalidatePath('/posts');
 
     return {
-      message: 'New post successfully created',
+      message: 'Post created successfully.',
       data: createdPost,
       status: true,
     };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2002') {
-        return {
-          message: 'A post with this title already exists.',
-          data: null,
-          status: false,
-        };
+        console.log('Post with the same title already exists.');
       }
     }
+
+    console.error('An error occurred while creating the post.', error);
 
     return {
       message: 'An error occurred while creating the post.',

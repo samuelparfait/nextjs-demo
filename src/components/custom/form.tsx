@@ -24,7 +24,11 @@ export function CreatePostForm({
 }: {
   action: (
     formData: FormData
-  ) => Promise<{ message: string; data: Post; status: boolean }>;
+  ) => Promise<{
+    message: string;
+    data: Partial<Post> | null;
+    status: boolean;
+  }>;
 }) {
   const { toast } = useToast();
   const {

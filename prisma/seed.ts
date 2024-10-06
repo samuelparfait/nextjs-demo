@@ -9,9 +9,9 @@ const users: Prisma.UserCreateInput[] = [
     encryptedPassword: 'XXXXXXXXXXX',
     posts: {
       create: {
-        title: 'Mock Post',
-        slug: 'mock-slug',
-        content: 'Mock Post Content',
+        title: 'The Brown Fox',
+        slug: 'the-brown-fox',
+        content: 'The quick brown fox jumps over the lazy dog.',
         published: true,
       },
     },

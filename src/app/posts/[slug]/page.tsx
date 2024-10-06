@@ -34,7 +34,9 @@ export default async function Single({ params }: Props) {
           By{' '}
           <span className='font-semibold'>
             {post.author.name} |{' '}
-            {DateTime.fromISO(post.createdAt.toISOString()).toRelative()}
+            <time dateTime={post.createdAt.toISOString()}>
+              {DateTime.fromISO(post.createdAt.toISOString()).toRelative()}
+            </time>
           </span>
         </p>
         <p className='leading-8'>{post.content}</p>
