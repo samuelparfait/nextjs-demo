@@ -4,6 +4,7 @@ import { Fredoka } from 'next/font/google';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Container } from '@/components/layout/container';
+import { Toaster } from '@/components/ui/toaster';
 
 import '@/styles/global.css';
 
@@ -27,6 +28,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </Container>
+        <Toaster />
       </body>
     </html>
   );

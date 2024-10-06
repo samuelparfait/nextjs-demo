@@ -13,7 +13,10 @@ export default async function Home() {
 
   const user = await prisma.user.findUnique({
     where: { email: 'mock.user@example.com' },
-    select: { email: true, posts: { where: { published: true } } },
+    select: {
+      email: true,
+      posts: { where: { published: true }, orderBy: { createdAt: 'desc' } },
+    },
   });
 
   if (!user) {

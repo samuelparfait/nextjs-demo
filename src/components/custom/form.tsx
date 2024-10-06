@@ -3,8 +3,10 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useToast } from '@/components/hooks/use-toast';
+import { ToastAction } from '@/components/ui/toast';
+import type { Post } from '@/lib/types';
 
-// Create a form schema for validation
 const formSchema = z.object({
   title: z
     .string()
@@ -15,20 +17,21 @@ const formSchema = z.object({
     .min(2, { message: 'Content must be at least 2 characters.' }),
 });
 
-// Create a type from the schema
 export type FormData = z.infer<typeof formSchema>;
 
-// Create a form component
 export function CreatePostForm({
   action,
 }: {
-  action: (formData: FormData) => Promise<void>;
+  action: (
+    formData: FormData
+  ) => Promise<{ message: string; data: Post; status: boolean }>;
 }) {
+  const { toast } = useToast();
   const {
     register,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: 'onBlur',
@@ -38,13 +41,19 @@ export function CreatePostForm({
     },
   });
 
-  // Handle form submission
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    await action(data);
+    const response = await action(data);
+
+    toast({
+      title: response.status ? 'Success' : 'Error',
+      description: response.message,
+      action: <ToastAction altText='Dismiss'>Dismiss</ToastAction>,
+      variant: response.status ? 'default' : 'destructive',
+    });
+
     reset();
   };
 
-  // Render the form
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -88,9 +97,10 @@ export function CreatePostForm({
 
       <button
         type='submit'
+        disabled={isSubmitting}
         className='w-full bg-slate-800 hover:bg-slate-950 text-white p-3 rounded-md'
       >
-        Create Post
+        {isSubmitting ? 'Submitting...' : 'Create Post'}
       </button>
     </form>
   );
