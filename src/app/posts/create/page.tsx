@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import { CreatePostForm } from '@/components/custom/form';
-import { createPost } from '@/lib/actions';
+
+import { CreatePostForm } from '@/components/custom/create-form';
 
 export const metadata: Metadata = {
   title: 'DETL Blog | Create a post',
@@ -15,7 +15,7 @@ export default async function CreatePost() {
 
         <p className='leading-8'>Fill out the form below to create a post.</p>
 
-        <CreatePostForm action={createPost} />
+        <CreatePostForm />
       </div>
     </main>
   );

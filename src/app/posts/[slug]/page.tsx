@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { DateTime } from 'luxon';
+
 import prisma from '@/lib/prisma';
 
 export const metadata: Metadata = {

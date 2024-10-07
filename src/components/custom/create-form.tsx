@@ -1,11 +1,10 @@
 'use client';
 
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useMutation, QueryClient } from '@tanstack/react-query';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useToast } from '@/components/hooks/use-toast';
-import { ToastAction } from '@/components/ui/toast';
-import type { Post } from '@/lib/types';
+import axios from 'axios';
 
 const formSchema = z.object({
   title: z
@@ -19,23 +18,12 @@ const formSchema = z.object({
 
 export type FormData = z.infer<typeof formSchema>;
 
-export function CreatePostForm({
-  action,
-}: {
-  action: (
-    formData: FormData
-  ) => Promise<{
-    message: string;
-    data: Partial<Post> | null;
-    status: boolean;
-  }>;
-}) {
-  const { toast } = useToast();
+export function CreatePostForm() {
   const {
     register,
     reset,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: 'onBlur',
@@ -45,15 +33,18 @@ export function CreatePostForm({
     },
   });
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    const response = await action(data);
+  const queryClient = new QueryClient();
 
-    toast({
-      title: response.status ? 'Success' : 'Error',
-      description: response.message,
-      action: <ToastAction altText='Dismiss'>Dismiss</ToastAction>,
-      variant: response.status ? 'default' : 'destructive',
-    });
+  const mutation = useMutation({
+    mutationKey: ['posts'],
+    mutationFn: (newPost: FormData) => {
+      return axios.post('/api/posts', newPost);
+    },
+  });
+
+  const onSubmit: SubmitHandler<FormData> = (formData) => {
+    mutation.mutate({ ...formData });
+    // queryClient.invalidateQueries('posts');
 
     reset();
   };
@@ -63,6 +54,15 @@ export function CreatePostForm({
       onSubmit={handleSubmit(onSubmit)}
       className='w-full flex flex-col gap-4 my-4'
     >
+      {mutation.isSuccess ? (
+        <p className='text-green-500'>
+          New post added! {JSON.stringify(mutation.data)}
+        </p>
+      ) : null}
+      {mutation.isError ? (
+        <p className='text-red-500'>{mutation.error.message}</p>
+      ) : null}
+
       <div className='space-y-2 flex flex-col'>
         <label htmlFor='title' className='font-semibold'>
           Title
@@ -101,10 +101,10 @@ export function CreatePostForm({
 
       <button
         type='submit'
-        disabled={isSubmitting}
+        disabled={mutation.isPending}
         className='w-full bg-slate-800 hover:bg-slate-950 text-white p-3 rounded-md'
       >
-        {isSubmitting ? 'Submitting...' : 'Create Post'}
+        {mutation.isPending ? 'Submitting...' : 'Create Post'}
       </button>
     </form>
   );
