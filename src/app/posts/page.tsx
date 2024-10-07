@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { DateTime } from 'luxon';
+import { useQuery } from '@tanstack/react-query';
 import prisma from '@/lib/prisma';
 
 export const metadata: Metadata = {

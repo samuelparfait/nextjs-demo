@@ -36,15 +36,16 @@ export function CreatePostForm() {
   const queryClient = new QueryClient();
 
   const mutation = useMutation({
-    mutationKey: ['posts'],
     mutationFn: (newPost: FormData) => {
       return axios.post('/api/posts', newPost);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
   });
 
   const onSubmit: SubmitHandler<FormData> = (formData) => {
     mutation.mutate({ ...formData });
-    // queryClient.invalidateQueries('posts');
 
     reset();
   };
@@ -55,9 +56,7 @@ export function CreatePostForm() {
       className='w-full flex flex-col gap-4 my-4'
     >
       {mutation.isSuccess ? (
-        <p className='text-green-500'>
-          New post added! {JSON.stringify(mutation.data)}
-        </p>
+        <p className='text-green-500'>New post added!</p>
       ) : null}
       {mutation.isError ? (
         <p className='text-red-500'>{mutation.error.message}</p>
